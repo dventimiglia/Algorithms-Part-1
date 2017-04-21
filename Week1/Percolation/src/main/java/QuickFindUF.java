@@ -1,5 +1,5 @@
 public class QuickFindUF {
-    private int[] id;
+    protected int[] id;
 
     public QuickFindUF (int N) {
 	id = new int[N];
