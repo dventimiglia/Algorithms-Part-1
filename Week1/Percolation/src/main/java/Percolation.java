@@ -5,10 +5,10 @@ public class Percolation {
     public static void main (String[] args) {
 	Percolation p = new Percolation(4);}
 
-    public int n;
-    public boolean[] sites;
-    public int nopen;
-    public WeightedQuickUnionUF system;
+    private int n;
+    private boolean[] sites;
+    private int nopen;
+    private WeightedQuickUnionUF system;
 
     public Percolation (int n) {
 	if (n<1) throw new IllegalArgumentException();
