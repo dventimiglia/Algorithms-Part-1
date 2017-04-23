@@ -105,5 +105,4 @@ public class Percolation {
 
     protected void join (int row1, int col1, int row2, int col2) {
 	try {if (sites[index(row2, col2)]) system.union(index(row1, col1), index(row2, col2));}
-	catch (Exception e) {}}
-}
+	catch (Exception e) {}}}
