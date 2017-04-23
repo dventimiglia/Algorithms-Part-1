@@ -10,10 +10,10 @@ public class PercolationStats {
 	System.out.println(String.format("stddev\t\t\t = %s", stats.stddev()));
 	System.out.println(String.format("95%% confidence interval\t = [%s, %s]", stats.confidenceLo(), stats.confidenceHi()));}
 
-    protected int n, trials;
-    protected double[] data;
-    protected double mean, stddev;
-    protected Random r = new Random();
+    private int n, trials;
+    private double[] data;
+    private double mean, stddev;
+    private Random r = new Random();
 
     public PercolationStats (int n, int trials) {
 	if (n<=0) throw new IllegalArgumentException(String.format("n=%s, but must be greater than 0.", n));
@@ -40,7 +40,7 @@ public class PercolationStats {
     public double confidenceHi () {
 	return mean + 1.96*stddev/Math.sqrt(trials);}
 
-    protected double runTrial () {
+    private double runTrial () {
 	Percolation p = new Percolation(n);
 	TreeSet<Integer> openSites = new TreeSet<>();
 	for (int i=0; i<n*n; i++) openSites.add(i);
@@ -48,7 +48,7 @@ public class PercolationStats {
 	double stat = (double)p.numberOfOpenSites() / (n*n);
 	return stat;}
 
-    protected void openSite (Percolation p, TreeSet<Integer> openSites) {
+    private void openSite (Percolation p, TreeSet<Integer> openSites) {
 	int index = r.nextInt(n*n);
 	int col = index % n;
 	int row = index / n;
