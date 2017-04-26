@@ -1,9 +1,15 @@
 import edu.princeton.cs.algs4.*;
 import java.util.*;
 
-public class RandomizedQueue<T> implements Iterable<T> {
+public class RandomizedQueue<T> implements Iterable<T>, Cloneable {
     private T[] s;
     private int N = 0;
+    private boolean cloned = false;
+
+    private RandomizedQueue (T[] storage) {
+	s = storage;
+	N = storage.length;
+	cloned = true;}
 
     private RandomizedQueue (int capacity) {
 	s = (T[]) new Object[capacity];}
@@ -23,6 +29,10 @@ public class RandomizedQueue<T> implements Iterable<T> {
 	T[] copy = (T[]) new Object[capacity];
 	for (int i = 0; i<N; i++) copy[i] = s[i];
 	s = copy;}
+
+    protected Object clone () {
+	RandomizedQueue<Object> c = new RandomizedQueue<>(s);
+	return c;}
 
     public RandomizedQueue () {
 	this(1);}
@@ -46,6 +56,7 @@ public class RandomizedQueue<T> implements Iterable<T> {
 	return N;}
 
     public Iterator<T> iterator () {
+	if (!cloned) return ((RandomizedQueue)clone()).iterator();
 	return new Iterator<T> () {
 	    private int i = N;
 	    public boolean hasNext () {
