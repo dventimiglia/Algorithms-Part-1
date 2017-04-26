@@ -1,20 +1,19 @@
+import edu.princeton.cs.algs4.*;
 import java.util.*;
 
 public class RandomizedQueue<T> implements Iterable<T> {
-    T[] s;
-    int N = 0;
+    private T[] s;
+    private int N = 0;
 
-    public RandomizedQueue () {
-	this(1);}
-
-    public RandomizedQueue (int capacity) {
+    private RandomizedQueue (int capacity) {
 	s = (T[]) new Object[capacity];}
 
-    public void push (T item) {
+    private void push (T item) {
 	if (N==s.length) resize(2*s.length);
 	s[N++] = item;}
 
-    public T pop () {
+    private T pop () {
+	if (N==0) throw new NoSuchElementException();
 	T item = s[--N];
 	s[N] = null;
 	if (N>0 && N==s.length/4) resize(s.length/2);
@@ -24,6 +23,27 @@ public class RandomizedQueue<T> implements Iterable<T> {
 	T[] copy = (T[]) new Object[capacity];
 	for (int i = 0; i<N; i++) copy[i] = s[i];
 	s = copy;}
+
+    public RandomizedQueue () {
+	this(1);}
+
+    public void enqueue (T item) {
+	push(item);}
+
+    public T dequeue () {
+	if (N==0) throw new NoSuchElementException();
+	int i = StdRandom.uniform(N);
+	T item = s[i];
+	T replacement = pop();
+	s[i] = replacement;
+	return item;}
+
+    public T sample () {
+	if (N==0) throw new NoSuchElementException();
+	return s[StdRandom.uniform(N)];}
+
+    public int size () {
+	return N;}
 
     public Iterator<T> iterator () {
 	return new Iterator<T> () {
