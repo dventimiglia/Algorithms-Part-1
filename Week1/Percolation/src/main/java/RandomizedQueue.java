@@ -1,68 +1,71 @@
 import edu.princeton.cs.algs4.*;
 import java.util.*;
 
-public class RandomizedQueue<T> implements Iterable<T>, Cloneable {
-    private T[] s;
+public class RandomizedQueue<Item> implements Iterable<Item> {
+    private Item[] s;
     private int N = 0;
-    private boolean cloned = false;
+    private boolean kloned = false;
 
-    private RandomizedQueue (T[] storage) {
+    private RandomizedQueue (Item[] storage) {
 	s = storage;
 	N = storage.length;
-	cloned = true;}
+	kloned = true;}
 
     private RandomizedQueue (int capacity) {
-	s = (T[]) new Object[capacity];}
+	s = (Item[]) new Object[capacity];}
 
-    private void push (T item) {
+    private void push (Item item) {
 	if (N==s.length) resize(2*s.length);
 	s[N++] = item;}
 
-    private T pop () {
+    private Item pop () {
 	if (N==0) throw new NoSuchElementException();
-	T item = s[--N];
+	Item item = s[--N];
 	s[N] = null;
 	if (N>0 && N==s.length/4) resize(s.length/2);
 	return item;}
 
     private void resize (int capacity) {
-	T[] copy = (T[]) new Object[capacity];
+	Item[] copy = (Item[]) new Object[capacity];
 	for (int i = 0; i<N; i++) copy[i] = s[i];
 	s = copy;}
 
-    protected Object clone () {
+    private Object klone () {
 	RandomizedQueue<Object> c = new RandomizedQueue<>(s);
 	return c;}
 
     public RandomizedQueue () {
 	this(1);}
 
-    public void enqueue (T item) {
+    public boolean isEmpty () {
+	return N==0;}
+
+    public void enqueue (Item item) {
 	push(item);}
 
-    public T dequeue () {
+    public Item dequeue () {
 	if (N==0) throw new NoSuchElementException();
 	int i = StdRandom.uniform(N);
-	T item = s[i];
-	T replacement = pop();
+	Item item = s[i];
+	Item replacement = pop();
 	s[i] = replacement;
 	return item;}
 
-    public T sample () {
+    public Item sample () {
 	if (N==0) throw new NoSuchElementException();
 	return s[StdRandom.uniform(N)];}
 
     public int size () {
 	return N;}
 
-    public Iterator<T> iterator () {
-	if (!cloned) return ((RandomizedQueue)clone()).iterator();
-	return new Iterator<T> () {
+    public Iterator<Item> iterator () {
+	if (!kloned) return ((RandomizedQueue)klone()).iterator();
+	return new Iterator<Item> () {
 	    private int i = N;
 	    public boolean hasNext () {
 		return i>0;}
 	    public void remove () {
 		throw new UnsupportedOperationException();}
-	    public T next () {
+	    public Item next () {
 		if (hasNext()) return s[--i];
 		throw new NoSuchElementException();}};}}
