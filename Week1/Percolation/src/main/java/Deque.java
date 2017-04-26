@@ -3,9 +3,14 @@ import java.util.*;
 public class Deque<T> implements Iterable<T> {
     private class Node {
 	T item;
-	Node next;}
+	Node next;
+	public String toString () {
+	    return String.format("[%s|%s]", item, next);}}
 
     private Node first, last, nexttolast;
+
+    public String toString () {
+	return String.format("first:  %s\nnexttolast:  %s\nlast:  %s\n", first, nexttolast, last);}
 
     public Deque () {
 	first = null;
@@ -23,25 +28,54 @@ public class Deque<T> implements Iterable<T> {
 
     public void addFirst (T item) {
 	if (item==null) throw new NullPointerException();
-	Node oldfirst = first;
-	first = new Node();
-	first.item = item;
-	first.next = oldfirst;
-	if (size()<=1) nexttolast = first;
-	if (size()==0) lst = first;}
+	Node newnode = new Node();
+	newnode.item = item;
+	if (size()==0) {
+	    first = newnode;
+	    nexttolast = newnode;
+	    last = newnode;}
+	else if (size()==1) {
+	    newnode.next = first;
+	    first = newnode;
+	    nexttolast = newnode;
+	    last = last;}
+	else if (size()==2) {
+	    newnode.next = first;
+	    first = newnode;
+	    nexttolast = last;
+	    last = last;}
+	else {
+	    newnode.next = first;
+	    first = newnode;
+	    nexttolast = nexttolast;
+	    last = last;}}
 
     public void addLast (T item) {
 	if (item==null) throw new NullPointerException();
-	Node oldlast = last;
-	last = new Node();
-	last.item = item;
-	last.next = null;
+	Node newnode = new Node();
+	newnode.item = item;
 	if (size()==0) {
+	    first = newnode;
+	    nexttolast = newnode;
+	    last = newnode;}
+	if (size()==1) {
+	    newnode.next = null;
+	    first = first;
+	    nexttolast = first;
+	    first.next = newnode;
+	    last = newnode;}
+	if (size()==2) {
+	    newnode.next = null;
+	    first = first;
 	    nexttolast = last;
-	    first = last;}
-	if (size()>=2) {
-	    nexttolast = oldlast;}
-	oldfirst.next = last;}
+	    last.next = newnode;
+	    last = newnode;}
+	else {
+	    newnode.next = null;
+	    first = first;
+	    nexttolast = last;
+	    last.next = newnode;
+	    last = newnode;}}
 
     public T removeFirst () {
 	if (isEmpty()) throw new NoSuchElementException();
