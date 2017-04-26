@@ -5,12 +5,16 @@ public class Deque<T> implements Iterable<T> {
 	T item;
 	Node next;}
 
-    private Node first, last;
+    private Node first, last, nexttolast;
 
-    // public Deque () {}
+    public Deque () {
+	first = null;
+	last = null;
+	nexttolast = null;}
 
     public boolean isEmpty () {
-	return first==null;}
+	if (first==null && last==null && nexttolast==null) return true;
+	throw new IllegalStateException();}
 
     public int size () {
 	int n = 0;
@@ -19,11 +23,12 @@ public class Deque<T> implements Iterable<T> {
 
     public void addFirst (T item) {
 	if (item==null) throw new NullPointerException();
-
 	Node oldfirst = first;
 	first = new Node();
 	first.item = item;
-	first.next = oldfirst;}
+	first.next = oldfirst;
+	if (size()<=1) nexttolast = first;
+	if (size()==0) lst = first;}
 
     public void addLast (T item) {
 	if (item==null) throw new NullPointerException();
@@ -31,19 +36,25 @@ public class Deque<T> implements Iterable<T> {
 	last = new Node();
 	last.item = item;
 	last.next = null;
-	if (isEmpty()) first = last;
-	else oldlast.next = last;}
+	if (size()==0) {
+	    nexttolast = last;
+	    first = last;}
+	if (size()>=2) {
+	    nexttolast = oldlast;}
+	oldfirst.next = last;}
 
     public T removeFirst () {
 	if (isEmpty()) throw new NoSuchElementException();
 	T item = first.item;
 	first = first.next;
+	if (isEmpty()) first = null;
 	return item;}
 
     public T removeLast () {
 	if (isEmpty()) throw new NoSuchElementException();
-	T item = first.item;
-	first = first.next;
+
+	T item = last.item;
+	last = first.next;
 	if (isEmpty()) last = null;
 	return item;}
 
@@ -58,5 +69,7 @@ public class Deque<T> implements Iterable<T> {
 		return item;}};}
 
     public static void main (String[] args) {
+	Deque<String> d = new Deque<>();
+	d.addFirst("1");
     }
 }
