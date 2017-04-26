@@ -108,6 +108,8 @@ public class Deque<T> implements Iterable<T> {
 	    public boolean hasNext () {return current!=null;}
 	    public void remove () {throw new UnsupportedOperationException();}
 	    public T next () {
-		T item = current.item;
-		current = reversed ? current.prev : current.next;
-		return item;}};}}
+		if (hasNext()) {
+		    T item = current.item;
+		    current = reversed ? current.prev : current.next;
+		    return item;}
+		throw new NoSuchElementException();}};}}
