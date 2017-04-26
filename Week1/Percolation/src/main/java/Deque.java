@@ -5,32 +5,20 @@ public class Deque<T> implements Iterable<T> {
 	T item;
 	Node next;
 	Node prev;
+	@Override
 	public String toString () {
 	    return String.format("[%s|%s]", item, reversed ? prev : next);}}
 
     private Node first, last;
     private boolean reversed;
 
-    public String toString () {
-	return String.format("%s", reversed ? last : first);}
-
-    public Deque () {
-	first = null;
-	last = null;
-	reversed = false;}
-
-    public boolean isEmpty () {
+    private boolean isEmpty () {
 	return first==null && last==null;}
 
-    public int size () {
-	int n = 0;
-	for (T item : this) n++;
-	return n;}
-
-    public void reverse () {
+    private void reverse () {
 	reversed = !reversed;}
     
-    public void add (T item) {
+    private void add (T item) {
 	if (item==null) throw new NullPointerException();
 	Node newnode = new Node();
 	newnode.item = item;
@@ -47,26 +35,10 @@ public class Deque<T> implements Iterable<T> {
 		newnode.next = first;
 		first = newnode;}}}
 
-    public void addFirst (T item) {
-	if (reversed) {
-	    reverse();
-	    add(item);
-	    reverse();}
-	else {
-	    add(item);}}
-
-    public void addLast (T item) {
-	if (reversed) {
-	    add(item);}
-	else {
-	    reverse();
-	    add(item);
-	    reverse();}}
-
-    public boolean isReversed () {
+    private boolean isReversed () {
 	return reversed;}
 
-    public T remove () {
+    private T remove () {
 	if (size()==0) throw new NoSuchElementException();
 	if (size()==1) {
 	    T item = first.item;
@@ -83,6 +55,36 @@ public class Deque<T> implements Iterable<T> {
 	    first.next.prev = null;
 	    first = first.next;
 	    return item;}}
+
+    @Override
+    public String toString () {
+	return String.format("%s", reversed ? last : first);}
+
+    public Deque () {
+	first = null;
+	last = null;
+	reversed = false;}
+
+    public int size () {
+	int n = 0;
+	for (T item : this) n++;
+	return n;}
+
+    public void addFirst (T item) {
+	if (reversed) {
+	    reverse();
+	    add(item);
+	    reverse();}
+	else {
+	    add(item);}}
+
+    public void addLast (T item) {
+	if (reversed) {
+	    add(item);}
+	else {
+	    reverse();
+	    add(item);
+	    reverse();}}
 
     public T removeFirst () {
 	if (reversed) {
