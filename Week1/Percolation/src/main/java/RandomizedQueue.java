@@ -6,9 +6,9 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private int N = 0;
     private boolean kloned = false;
 
-    private RandomizedQueue (Item[] storage) {
+    private RandomizedQueue (Item[] storage, int size) {
 	s = storage;
-	N = storage.length;
+	N = size;
 	kloned = true;}
 
     private RandomizedQueue (int capacity) {
@@ -31,7 +31,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 	s = copy;}
 
     private Object klone () {
-	RandomizedQueue<Object> c = new RandomizedQueue<>(s);
+	RandomizedQueue<Object> c = new RandomizedQueue<>(s, N);
 	return c;}
 
     public RandomizedQueue () {
