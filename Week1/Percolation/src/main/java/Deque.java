@@ -78,18 +78,37 @@ public class Deque<T> implements Iterable<T> {
 	    last = newnode;}}
 
     public T removeFirst () {
-	if (isEmpty()) throw new NoSuchElementException();
+	if (size()==0) throw new NoSuchElementException();
 	T item = first.item;
-	first = first.next;
-	if (isEmpty()) first = null;
+	if (size()==1) {
+	    last = null;
+	    nexttolast = null;
+	    first = null;}
+	else if (size()==2) {
+	    last = first.next;
+	    nexttolast = first.next;
+	    first = first.next;}
+	else {
+	    last = last;
+	    nexttolast = nexttolast;
+	    first = first.next;}
 	return item;}
 
     public T removeLast () {
-	if (isEmpty()) throw new NoSuchElementException();
-
+	if (size()==0) throw new NoSuchElementException();
 	T item = last.item;
-	last = first.next;
-	if (isEmpty()) last = null;
+	if (size()==1) {
+	    last = null;
+	    nexttolast = null;
+	    first = null;}
+	else if (size()==2) {
+	    last = first;
+	    nexttolast = nexttolast;
+	    first.next = null;}
+	else {
+	    last = nexttolast;
+	    nexttolast.next = null;
+	    nexttolast = first;}
 	return item;}
 
     public Iterator<T> iterator () {
