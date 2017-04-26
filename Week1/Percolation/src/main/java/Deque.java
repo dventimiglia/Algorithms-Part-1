@@ -68,18 +68,21 @@ public class Deque<T> implements Iterable<T> {
 
     public T remove () {
 	if (size()==0) throw new NoSuchElementException();
-	T item = first.item;
 	if (size()==1) {
+	    T item = first.item;
 	    first = null;
-	    last = null;}
+	    last = null;
+	    return item;}
+	if (reversed) {
+	    T item = last.item;
+	    last.prev.next = null;
+	    last = last.prev;
+	    return item;}
 	else {
-	    if (reversed) {
-		last.prev.next = null;
-		last = last.prev;}
-	    else {
-		first.next.prev = null;
-		first = first.next;}}
-	return item;}
+	    T item = first.item;
+	    first.next.prev = null;
+	    first = first.next;
+	    return item;}}
 
     public T removeFirst () {
 	if (reversed) {
