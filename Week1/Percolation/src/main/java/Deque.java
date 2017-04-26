@@ -56,14 +56,14 @@ public class Deque<T> implements Iterable<T> {
 	    first = first.next;
 	    return item;}}
 
-    @Override
-    public String toString () {
-	return String.format("%s", reversed ? last : first);}
-
     public Deque () {
 	first = null;
 	last = null;
 	reversed = false;}
+
+    @Override
+    public String toString () {
+	return String.format("%s", reversed ? last : first);}
 
     public int size () {
 	int n = 0;
