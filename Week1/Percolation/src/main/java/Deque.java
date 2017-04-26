@@ -66,7 +66,7 @@ public class Deque<T> implements Iterable<T> {
     public boolean isReversed () {
 	return reversed;}
 
-    public T removeFirst () {
+    public T remove () {
 	if (size()==0) throw new NoSuchElementException();
 	T item = first.item;
 	if (size()==1) {
@@ -74,19 +74,28 @@ public class Deque<T> implements Iterable<T> {
 	    last = null;}
 	else {
 	    if (reversed) {
-		last.prev.next = last.next;
+		last.prev.next = null;
 		last = last.prev;}
 	    else {
-		first.next.prev = first.prev;
+		first.next.prev = null;
 		first = first.next;}}
 	return item;}
 
+    public T removeFirst () {
+	if (reversed) {
+	    reverse();
+	    T item = remove();
+	    reverse();
+	    return item;}
+	else return remove();}
+
     public T removeLast () {
-	if (size()==0) throw new NoSuchElementException();
-	reverse();
-	T item = removeFirst();
-	reverse();
-	return item;}
+	if (reversed) return remove();
+	else {
+	    reverse();
+	    T item = remove();
+	    reverse();
+	    return item;}}
 
     public Iterator<T> iterator () {
 	return new Iterator<T>() {
