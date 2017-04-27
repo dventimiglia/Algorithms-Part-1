@@ -23,7 +23,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 	if (N==0) throw new NoSuchElementException();
 	Item item = s[--N];
 	s[N] = null;
-	if (N>0 && N==s.length/4) resize(s.length/2);
+	if (N>0 && N==s.length/4 && !kloned) resize(s.length/2);
 	return item;}
 
     private void resize (int capacity) {
