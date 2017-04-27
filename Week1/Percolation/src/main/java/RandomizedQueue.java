@@ -6,9 +6,9 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     private int N = 0;
     private boolean kloned = false;
 
-    private RandomizedQueue (Item[] storage, int size) {
-	s = storage;
-	N = size;
+    private RandomizedQueue (Item[] copy) {
+	s = copy;
+	N = copy.length;
 	kloned = true;}
 
     private RandomizedQueue (int capacity) {
@@ -32,7 +32,9 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 	s = copy;}
 
     private Object klone () {
-	RandomizedQueue<Object> c = new RandomizedQueue<>(s, N);
+	Item[] copy = (Item[]) new Object[N];
+	for (int i = 0; i<N; i++) copy[i] = s[i];
+	RandomizedQueue<Object> c = new RandomizedQueue<>(copy);
 	return c;}
 
     public RandomizedQueue () {
@@ -62,11 +64,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     public Iterator<Item> iterator () {
 	if (!kloned) return ((RandomizedQueue)klone()).iterator();
 	return new Iterator<Item> () {
-	    private int i = N;
 	    public boolean hasNext () {
-		return i>0;}
+		return N>0;}
 	    public void remove () {
 		throw new UnsupportedOperationException();}
 	    public Item next () {
-		if (hasNext()) return s[--i];
+		if (hasNext()) return dequeue();
 		throw new NoSuchElementException();}};}}
