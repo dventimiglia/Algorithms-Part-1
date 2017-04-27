@@ -15,6 +15,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 	s = (Item[]) new Object[capacity];}
 
     private void push (Item item) {
+	if (item==null) throw new NullPointerException();
 	if (N==s.length) resize(2*s.length);
 	s[N++] = item;}
 
