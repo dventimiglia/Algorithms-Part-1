@@ -49,10 +49,10 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
     public Item dequeue () {
 	if (N==0) throw new NoSuchElementException();
 	int i = StdRandom.uniform(N);
-	Item item = s[i];
-	Item replacement = pop();
-	s[i] = replacement;
-	return item;}
+	Item last = s[N-1];
+	s[N-1] = s[i];
+	s[i] = last;
+	return pop();}
 
     public Item sample () {
 	if (N==0) throw new NoSuchElementException();
