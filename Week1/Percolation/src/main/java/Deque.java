@@ -10,6 +10,7 @@ public class Deque<Item> implements Iterable<Item> {
 	    return String.format("[%s|%s]", item, reversed ? prev : next);}}
 
     private Node first, last;
+    private int N;
     private boolean reversed;
 
     private void reverse () {
@@ -30,7 +31,8 @@ public class Deque<Item> implements Iterable<Item> {
 	    else {
 		first.prev = newnode;
 		newnode.next = first;
-		first = newnode;}}}
+		first = newnode;}}
+	N++;}
 
     private boolean isReversed () {
 	return reversed;}
@@ -41,34 +43,36 @@ public class Deque<Item> implements Iterable<Item> {
 	    Item item = first.item;
 	    first = null;
 	    last = null;
+	    N--;
 	    return item;}
 	if (reversed) {
 	    Item item = last.item;
 	    last.prev.next = null;
 	    last = last.prev;
+	    N--;
 	    return item;}
 	else {
 	    Item item = first.item;
 	    first.next.prev = null;
 	    first = first.next;
+	    N--;
 	    return item;}}
 
     public Deque () {
 	first = null;
 	last = null;
-	reversed = false;}
+	reversed = false;
+	N = 0;}
 
     public boolean isEmpty () {
-	return first==null && last==null;}
+	return N==0;}
 
     @Override
     public String toString () {
 	return String.format("%s", reversed ? last : first);}
 
     public int size () {
-	int n = 0;
-	for (Item item : this) n++;
-	return n;}
+	return N;}
 
     public void addFirst (Item item) {
 	if (reversed) {
