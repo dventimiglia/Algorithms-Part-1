@@ -12,14 +12,15 @@ public class FastCollinearPoints {
 	    Point[] candidates = Arrays.copyOfRange(points, i, points.length);
 	    Arrays.sort(candidates, o.slopeOrder());
 	    double oldslope = Double.NEGATIVE_INFINITY;
+	    Point oldc = o;
 	    int len = 1;
-	    for (Point c : candidates) {
-		double newslope = o.slopeTo(c);
+	    for (Point newc : candidates) {
+		double newslope = o.slopeTo(newc);
 		if (newslope==oldslope) len++;
-		oldslope = newslope;
-		if (len==3) {
-		    segs.add(new LineSegment(o, c));
-		    len = 1;}}}}
+		if (newslope!=oldslope && len>=3) segs.add(new LineSegment(o, oldc));
+		if (newslope!=oldslope) len=1;
+		oldc = newc;
+		oldslope = newslope;}}}
 
     public int numberOfSegments () {
 	return segs.size();}

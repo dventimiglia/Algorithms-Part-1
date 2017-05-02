@@ -1,6 +1,6 @@
 # -*- comment: #; -*-
 
 use src/main/java
-stop in FastCollinearPoints.<init>
-# stop at FastCollinearPoints:14
-run FastCollinearPoints collinear/input8.txt
+# stop in FastCollinearPoints.<init>
+stop at FastCollinearPoints:17
+run FastCollinearPoints collinear/input6.txt
