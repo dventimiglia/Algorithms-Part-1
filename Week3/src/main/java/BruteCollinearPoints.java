@@ -17,10 +17,6 @@ public class BruteCollinearPoints {
 		    for (int l = k+1; l<points.length; l++) {
 			if (points[i].slopeTo(points[j])==points[i].slopeTo(points[k]) &&
 			    points[i].slopeTo(points[j])==points[i].slopeTo(points[l])) {
-			    System.out.println(String.format("%f,%f,%f",
-							     points[i].slopeTo(points[j]),
-							     points[i].slopeTo(points[j]),
-							     points[i].slopeTo(points[j])));
 			    coll[0] = points[i];
 			    coll[1] = points[j];
 			    coll[2] = points[k];
@@ -42,14 +38,14 @@ public class BruteCollinearPoints {
 	    int x = in.readInt();
 	    int y = in.readInt();
 	    points[i] = new Point(x, y);}
-	// StdDraw.enableDoubleBuffering();
-	// StdDraw.setXscale(0, 32768);
-	// StdDraw.setYscale(0, 32768);
-	// for (Point p : points) p.draw();
-	// StdDraw.show();
+	StdDraw.enableDoubleBuffering();
+	StdDraw.setXscale(0, 32768);
+	StdDraw.setYscale(0, 32768);
+	for (Point p : points) p.draw();
+	StdDraw.show();
 	BruteCollinearPoints collinear = new BruteCollinearPoints(points);
-	// for (LineSegment segment : collinear.segments()) {
-	//     StdOut.println(segment);
-	//     segment.draw();}
-	// StdDraw.show();
+	for (LineSegment segment : collinear.segments()) {
+	    StdOut.println(segment);
+	    segment.draw();}
+	StdDraw.show();
     }}
