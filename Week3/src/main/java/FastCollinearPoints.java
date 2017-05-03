@@ -6,21 +6,19 @@ public class FastCollinearPoints {
 
     public FastCollinearPoints (Point[] points) {
 	Arrays.sort(points);
-	int i = 0;
-	for (Point o : points) {
-	    i++;
+	for (int i = 0; i<points.length; i++) {
 	    Point[] candidates = Arrays.copyOfRange(points, i, points.length);
-	    Arrays.sort(candidates, o.slopeOrder());
-	    double oldslope = Double.NEGATIVE_INFINITY;
-	    Point oldc = o;
+	    Arrays.sort(candidates, points[i].slopeOrder());
+	    double slope = Double.NEGATIVE_INFINITY;
 	    int len = 1;
-	    for (Point newc : candidates) {
-		double newslope = o.slopeTo(newc);
-		if (newslope==oldslope) len++;
-		if (newslope!=oldslope && len>=3) segs.add(new LineSegment(o, oldc));
-		if (newslope!=oldslope) len=1;
-		oldc = newc;
-		oldslope = newslope;}}}
+	    for (int j = candidates.length-1; j>=0; j--) {
+		if (points[i].slopeTo(candidates[j])==slope)
+		    len++;
+		else {
+		    if (len>=3)
+			segs.add(new LineSegment(points[i], candidates[j+len]));
+		    len = 1;}
+		slope = points[i].slopeTo(candidates[j]);}}}
 
     public int numberOfSegments () {
 	return segs.size();}
