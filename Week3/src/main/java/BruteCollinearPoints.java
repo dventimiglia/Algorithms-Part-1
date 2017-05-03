@@ -2,7 +2,7 @@ import edu.princeton.cs.algs4.*;
 import java.util.*;
 
 public class BruteCollinearPoints {
-    List<LineSegment> segs = new ArrayList<>();
+    private List<LineSegment> segs = new ArrayList<>();
     
     public BruteCollinearPoints (Point[] points) {
 	if (points==null) throw new NullPointerException();
