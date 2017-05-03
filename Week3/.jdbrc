@@ -2,5 +2,5 @@
 
 use src/main/java
 # stop in FastCollinearPoints.<init>
-stop at FastCollinearPoints:17
-run FastCollinearPoints collinear/input6.txt
+stop at FastCollinearPoints:15
+run FastCollinearPoints collinear/input8.txt
