@@ -1,5 +1,3 @@
-# -*- comment: #; -*-
-
 use src/main/java
 # stop in FastCollinearPoints.<init>
 stop at FastCollinearPoints:15
