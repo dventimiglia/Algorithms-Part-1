@@ -7,24 +7,34 @@ public class Solver {
     public Solver (Board initial) {
 	this.initial = initial;}
     public boolean isSolvable () {
-	return true;}
+	Iterator<Board> puzzle = solution(initial).iterator();
+	Iterator<Board> pilot = solution(initial.twin()).iterator();
+	while (true) {
+	    if (puzzle.hasNext() && pilot.hasNext())
+		{puzzle.next(); pilot.next();}
+	    if (puzzle.hasNext() && !pilot.hasNext())
+		return false;
+	    if (!puzzle.hasNext())
+		return true;}}
     public int moves () {
 	int moves = 0;
 	for (Board b : solution())
 	    moves++;
 	return moves;}
     public Iterable<Board> solution () {
+	return solution(initial);}
+    public Iterable<Board> solution (Board initial) {
 	return new Iterable<Board> () {
 	    @Override
 	    public Iterator<Board> iterator () {
 		return new Iterator<Board> () {
 		    Iterator<SearchNode> i1 = (new Puzzle(initial)).iterator();
-		    Iterator<SearchNode> i2 = (new Puzzle(initial)).iterator();
 		    @Override
 		    public boolean hasNext () {
-			return i1.hasNext() && i2.hasNext();}
+			return i1.hasNext();}
 		    public Board next () {
-			return i1.hasNext() ? i2.next().board : i1.next().board;}};}};}
+			if (!hasNext()) throw new NoSuchElementException();
+			return i1.next().board;}};}};}
     public static void main (String[] args) {
 	// create initial board from file
 	In in = new In(args[0]);
