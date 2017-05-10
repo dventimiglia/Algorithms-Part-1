@@ -1,3 +1,5 @@
 use src/main/java
-stop in Board.neighbors
-run Board
+stop in Solver.solution
+run Solver /home/dventimi/Downloads/8puzzle/puzzle04.txt
+
+

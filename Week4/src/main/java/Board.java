@@ -135,7 +135,7 @@ public class Board {
 
     public String toString () {
 	StringBuffer sb = new StringBuffer();
-	for (int[] row : blocks)
+	for (int[] row : blocks) 
 	    sb.append(String.format(" %s  %s  %s\n", row[0], row[1], row[2]));
 	return sb.toString();}
 
