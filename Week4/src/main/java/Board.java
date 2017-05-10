@@ -22,9 +22,6 @@ public class Board {
     private int blank () {
 	return blank;}
 
-    private int dimension () {
-	return blocks.length;}
-
     private int wrap (final int a, final int mod) {
 	return a>=0 ? a % mod : wrap(mod+a, mod);}
 
@@ -50,12 +47,6 @@ public class Board {
     private int hamming (final int a) {
 	return hamming(row(a), col(a));}
 
-    public int hamming () {
-	int errors = 0;
-	for (int i = 1; i<=dimension()*dimension(); i++)
-	    errors+=hamming(i);
-	return errors;}
-
     private int abs (final int a) {
 	return a>=0 ? a : -1*a;}
 
@@ -66,6 +57,15 @@ public class Board {
 
     private int manhattan (final int a) {
 	return manhattan(row(a), col(a));}
+
+    public int dimension () {
+	return blocks.length;}
+
+    public int hamming () {
+	int errors = 0;
+	for (int i = 1; i<=dimension()*dimension(); i++)
+	    errors+=hamming(i);
+	return errors;}
 
     public int manhattan () {
 	int errors = 0;
@@ -85,9 +85,6 @@ public class Board {
 	t[wrap(y2)][wrap(x2)] = blocks[wrap(y1)][wrap(x1)];
 	return new Board(t);}
 
-    public Board twin () {
-	return blank/dimension()==0 ? twin(1,0,1,1) : twin(0,0,0,1);}
-
     private Board neighbor (final int direction) {
 	int x = blank()%dimension();
 	int y = blank()/dimension();
@@ -97,6 +94,9 @@ public class Board {
 	case 2 : return twin(x,y,x,y+1);
 	case 3 : return twin(x,y,x-1,y);
 	default : throw new IllegalStateException();}}
+
+    public Board twin () {
+	return blank/dimension()==0 ? twin(1,0,1,1) : twin(0,0,0,1);}
 
     public boolean equals (final Object that) {
 	if (this==that) return true;
