@@ -2,37 +2,93 @@ import edu.princeton.cs.algs4.*;
 import java.util.*;
 
 public class Board {
-    private int[][] blocks;
-    private int blank;
-    public Board (int[][] blocks) {
+    public int[][] blocks;
+    public int blank;
+
+    public Board (final int[][] blocks) {
 	this.blocks = copyOf(blocks);
 	for (int i = 0; i<dimension()*dimension(); i++)
 	    if (this.blocks[i/dimension()][i%dimension()]==0) {
 		blank = i;
 		break;}}
-    public int[][] copyOf (int[][] blocks) {
+
+    public int[][] copyOf (final int[][] blocks) {
 	int[][] copy = new int[blocks.length][blocks[0].length];
 	for (int i = 0; i<blocks.length; i++)
 	    for (int j = 0; j<blocks[i].length; j++)
 		copy[i][j] = blocks[i][j];
 	return copy;}
+
     public int blank () {
 	return blank;}
+
     public int dimension () {
 	return blocks.length;}
-    public int hamming () {return -1;}
-    public int manhattan () {return -1;}
-    public boolean isGoal () {return false;}
-    public int normalize (int a) {
-	return a>=0 ? a % dimension() : normalize(dimension()+a);}
-    public Board twin (int x1, int y1, int x2, int y2) {
+
+    public int wrap (final int a, final int mod) {
+	return a>=0 ? a % mod : wrap(mod+a, mod);}
+
+    public int wrap (final int a) {
+	return wrap(a, dimension());}
+
+    public int row (final int a) {
+	return wrap(a-1, dimension()*dimension())/dimension()+1;}
+
+    public int col (final int a) {
+	return wrap(a-1, dimension()*dimension())%dimension()+1;}
+
+    public int cell (final int row, final int col) {
+	return blocks[wrap(row-1)][wrap(col-1)];}
+
+    public int cell (final int a) {
+	return cell(row(a), col(a));}
+
+    public int hamming (final int row, final int col) {
+	return cell(row, col)==0 ? 0 :
+	    cell(row, col)==((row-1)*dimension()+col) ? 0 : 1;}
+
+    public int hamming (final int a) {
+	return hamming(row(a), col(a));}
+
+    public int hamming () {
+	int errors = 0;
+	for (int i = 1; i<=dimension()*dimension(); i++)
+	    errors+=hamming(i);
+	return errors;}
+
+    public int abs (final int a) {
+	return a>=0 ? a : -1*a;}
+
+    public int manhattan (final int row, final int col) {
+	return cell(row, col)==0 ? 0 :
+	    abs(row(cell(row, col)) - row) +
+	    abs(col(cell(row, col)) - col);}
+
+    public int manhattan (final int a) {
+	return manhattan(row(a), col(a));}
+
+    public int manhattan () {
+	int errors = 0;
+	for (int i = 1; i<=dimension()*dimension(); i++)
+	    errors+=manhattan(i);
+	return errors;}
+
+    public boolean isGoal () {
+	if (hamming()!=0 || manhattan()!=0)
+	    if (hamming()*manhattan()==0)
+		throw new IllegalStateException();
+	return hamming()==0;}
+
+    public Board twin (final int x1, final int y1, final int x2, final int y2) {
 	int[][] t = copyOf(blocks);
-	t[normalize(y1)][normalize(x1)] = blocks[normalize(y2)][normalize(x2)];
-	t[normalize(y2)][normalize(x2)] = blocks[normalize(y1)][normalize(x1)];
+	t[wrap(y1)][wrap(x1)] = blocks[wrap(y2)][wrap(x2)];
+	t[wrap(y2)][wrap(x2)] = blocks[wrap(y1)][wrap(x1)];
 	return new Board(t);}
+
     public Board twin () {
 	return blank/dimension()==0 ? twin(1,0,1,1) : twin(0,0,0,1);}
-    public Board neighbor (int direction) {
+
+    public Board neighbor (final int direction) {
 	int x = blank()%dimension();
 	int y = blank()/dimension();
 	switch (direction%4) {
@@ -41,7 +97,8 @@ public class Board {
 	case 2 : return twin(x,y,x,y+1);
 	case 3 : return twin(x,y,x-1,y);
 	default : throw new IllegalStateException();}}
-    public boolean equals (Object that) {
+
+    public boolean equals (final Object that) {
 	if (this==that) return true;
 	if (!(that instanceof Board)) return false;
 	if (that==null) return false;
@@ -50,6 +107,7 @@ public class Board {
 	    for (int j = 0; j<dimension(); j++)
 		if (blocks[i][j]!=((Board)that).blocks[i][j]) return false;
 	return true;}
+
     public Iterable<Board> neighbors () {
 	int[] directions;
 	if (blank()==0)
@@ -74,12 +132,14 @@ public class Board {
 	for (int d : directions)
 	    n.add(neighbor(d));
 	return n;}
+
     public String toString () {
 	StringBuffer sb = new StringBuffer();
 	for (int[] row : blocks)
 	    sb.append(String.format(" %s  %s  %s\n", row[0], row[1], row[2]));
 	return sb.toString();}
-    public static void main (String[] args) {
+
+    public static void main (final String[] args) {
 	Board b = new Board(new int[][]{{1,0,2},
 					{3,4,5},
 					{6,7,8}});
@@ -90,4 +150,3 @@ public class Board {
 	System.out.println("Neighbors:");
 	for (Board n : b.neighbors())
 	    System.out.println(n);}}
-
