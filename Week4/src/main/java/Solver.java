@@ -2,41 +2,29 @@ import edu.princeton.cs.algs4.*;
 import java.util.*;
 
 public class Solver {
-    public MinPQ<SearchNode> pq = new MinPQ<>(new HammingPriority());
-    public SearchNode first = null;
-    public SearchNode last = null;
+    public Board initial = null;
 
     public Solver (Board initial) {
-	first = new SearchNode(initial, 0, null);
-	last = first;
-	pq.insert(last);
-	while (!pq.isEmpty() && !last.board.isGoal()) {
-	    last = pq.delMin();
-	    if (last.previous!=null)
-		last.previous.next = last;
-	    for (Board b : last.board.neighbors()) {
-		if (last.previous==null || !last.previous.board.equals(b))
-		    pq.insert(new SearchNode(b, last.moves+1, last));}}}
+	this.initial = initial;}
     public boolean isSolvable () {
 	return true;}
     public int moves () {
-	return last.moves;}
+	int moves = 0;
+	for (Board b : solution())
+	    moves++;
+	return moves;}
     public Iterable<Board> solution () {
-	return new Iterable<Board>() {
+	return new Iterable<Board> () {
 	    @Override
 	    public Iterator<Board> iterator () {
 		return new Iterator<Board> () {
-		    SearchNode curr = first;
+		    Iterator<SearchNode> i1 = (new Puzzle(initial)).iterator();
+		    Iterator<SearchNode> i2 = (new Puzzle(initial)).iterator();
 		    @Override
 		    public boolean hasNext () {
-			return curr!=null;}
-		    @Override
+			return i1.hasNext() && i2.hasNext();}
 		    public Board next () {
-			if (!hasNext())
-			    throw new NoSuchElementException();
-			Board b = curr.board;
-			curr = curr.next;
-			return b;}};}};}
+			return i1.hasNext() ? i2.next().board : i1.next().board;}};}};}
     public static void main (String[] args) {
 	// create initial board from file
 	In in = new In(args[0]);
@@ -60,7 +48,6 @@ class SearchNode {
     public Board board;
     public int moves;
     public SearchNode previous;
-    public SearchNode next;
     public SearchNode (final Board board, final int moves, final SearchNode previous) {
 	this.board = board;
 	this.moves = moves;
@@ -92,3 +79,23 @@ class ManhattanPriority implements Comparator<SearchNode> {
 	if (o1.board.manhattan() + o1.moves > o2.board.manhattan() + o2.moves)
 	    return 1;
 	return 0;}}
+
+class Puzzle implements Iterable<SearchNode> {
+    public SearchNode first = null;
+    public Puzzle (Board initial) {
+	first = new SearchNode(initial, 0, null);}
+    public Iterator<SearchNode> iterator () {
+	return new Iterator<SearchNode>() {
+	    MinPQ<SearchNode> pq = new MinPQ<>(new HammingPriority());
+	    SearchNode last = first;
+	    {pq.insert(last);}
+	    @Override
+	    public boolean hasNext () {
+		return !pq.isEmpty() && !last.board.isGoal();}
+	    @Override
+	    public SearchNode next () {
+		last = pq.delMin();
+		for (Board b : last.board.neighbors()) {
+		    if (last.previous==null || !last.previous.board.equals(b))
+			pq.insert(new SearchNode(b, last.moves+1, last));}
+		return last;}};}}
