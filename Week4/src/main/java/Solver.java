@@ -2,7 +2,7 @@ import edu.princeton.cs.algs4.*;
 import java.util.*;
 
 public class Solver {
-    public Board initial = null;
+    private Board initial = null;
 
     public Solver (Board initial) {
 	this.initial = initial;}
@@ -23,7 +23,7 @@ public class Solver {
 	return moves;}
     public Iterable<Board> solution () {
 	return solution(initial);}
-    public Iterable<Board> solution (Board initial) {
+    private Iterable<Board> solution (Board initial) {
 	return new Iterable<Board> () {
 	    @Override
 	    public Iterator<Board> iterator () {
