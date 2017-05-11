@@ -135,8 +135,12 @@ public class Board {
 
     public String toString () {
 	StringBuffer sb = new StringBuffer();
-	for (int[] row : blocks) 
-	    sb.append(String.format(" %s  %s  %s\n", row[0], row[1], row[2]));
+	sb.append(String.format("%d\n", dimension()));
+	String fmt = String.join(" ", Collections.nCopies(dimension(), "%s")) + "\n";
+	for (int[] row : blocks) {
+	    for (int cell : row)
+		sb.append(String.format("%3d", cell));
+	    sb.append("\n");}
 	return sb.toString();}
 
     public static void main (final String[] args) {
