@@ -79,20 +79,20 @@ public class Board {
 		throw new IllegalStateException();
 	return hamming()==0;}
 
-    private Board twin (final int x1, final int y1, final int x2, final int y2) {
+    private Board twin (final int r1, final int c1, final int r2, final int c2) {
 	int[][] t = copyOf(blocks);
-	t[wrap(y1)][wrap(x1)] = blocks[wrap(y2)][wrap(x2)];
-	t[wrap(y2)][wrap(x2)] = blocks[wrap(y1)][wrap(x1)];
+	t[wrap(r1)][wrap(c1)] = blocks[wrap(r2)][wrap(c2)];
+	t[wrap(r2)][wrap(c2)] = blocks[wrap(r1)][wrap(c1)];
 	return new Board(t);}
 
     private Board neighbor (final int direction) {
-	int x = blank()%dimension();
-	int y = blank()/dimension();
+	int c = blank()%dimension();
+	int r = blank()/dimension();
 	switch (direction%4) {
-	case 0 : return twin(x,y,x,y-1);
-	case 1 : return twin(x,y,x+1,y);
-	case 2 : return twin(x,y,x,y+1);
-	case 3 : return twin(x,y,x-1,y);
+	case 0 : return twin(r,c,r-1,c);
+	case 1 : return twin(r,c,r,c+1);
+	case 2 : return twin(r,c,r+1,c);
+	case 3 : return twin(r,c,r,c-1);
 	default : throw new IllegalStateException();}}
 
     public Board twin () {
@@ -138,8 +138,11 @@ public class Board {
 	sb.append(String.format("%d\n", dimension()));
 	String fmt = String.join(" ", Collections.nCopies(dimension(), "%s")) + "\n";
 	for (int[] row : blocks) {
-	    for (int cell : row)
-		sb.append(String.format("%3d", cell));
+	    int col = 0;
+	    for (int cell : row) {
+		sb.append(String.format(col==0 ? "%2d" : "%3d", cell));
+		col++;}
+	    // sb.append(String.format("  H:%s, M:%s", hamming(), manhattan()));
 	    sb.append("\n");}
 	return sb.toString();}
 

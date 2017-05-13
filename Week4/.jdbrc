@@ -1,5 +1,5 @@
 use src/main/java
-stop at Board:140
-run Solver /home/dventimi/Downloads/8puzzle/puzzle04.txt
+stop in Puzzle.iterator
+run Solver /home/dventimi/Downloads/8puzzle/puzzle01.txt
 
 

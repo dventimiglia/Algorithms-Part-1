@@ -2,39 +2,48 @@ import edu.princeton.cs.algs4.*;
 import java.util.*;
 
 public class Solver {
-    private Board initial = null;
+    private SearchNode first, last;
+    private Puzzle p1, p2;
+    private List<Board> target = new ArrayList<>();
 
     public Solver (Board initial) {
-	this.initial = initial;}
+	p1 = new Puzzle(initial);
+	p2 = new Puzzle(initial.twin());
+	Iterator<SearchNode> i1 = p1.iterator();
+	Iterator<SearchNode> i2 = p2.iterator();
+	while (i1.hasNext() && i2.hasNext()) {last = i1.next(); i2.next();}
+	if (i2.hasNext())
+	    new Iterable<Board>() {
+		@Override
+		public Iterator<Board> iterator () {
+		    return new Iterator<Board>() {
+			SearchNode curr = last;
+			@Override
+			public boolean hasNext () {
+			    if (
     public boolean isSolvable () {
-	Iterator<Board> puzzle = solution(initial).iterator();
-	Iterator<Board> pilot = solution(initial.twin()).iterator();
-	while (true) {
-	    if (puzzle.hasNext() && pilot.hasNext())
-		{puzzle.next(); pilot.next();}
-	    if (puzzle.hasNext() && !pilot.hasNext())
-		return false;
-	    if (!puzzle.hasNext())
-		return true;}}
+	return last!=null;}
     public int moves () {
-	int moves = 0;
-	for (Board b : solution())
-	    moves++;
-	return moves;}
+	if (!isSolvable()) throw new IllegalStateException();
+	List<Board> target = new ArrayList<>();
+	solution().forEach(target::add);
+	return target.size();}
     public Iterable<Board> solution () {
-	return solution(initial);}
-    private Iterable<Board> solution (Board initial) {
-	return new Iterable<Board> () {
+	return new Iterable<Board>() {
 	    @Override
 	    public Iterator<Board> iterator () {
-		return new Iterator<Board> () {
-		    Iterator<SearchNode> i1 = (new Puzzle(initial)).iterator();
+		return new Iterator<Board>() {
+		    SearchNode curr = p1.first;
 		    @Override
 		    public boolean hasNext () {
-			return i1.hasNext();}
+			if (curr.next==null) return false;
+			return true;}
+		    @Override
 		    public Board next () {
 			if (!hasNext()) throw new NoSuchElementException();
-			return i1.next().board;}};}};}
+			Board b = curr.board;
+			curr = curr.next;
+			return b;}};}};}
     public static void main (String[] args) {
 	// create initial board from file
 	In in = new In(args[0]);
@@ -54,41 +63,29 @@ public class Solver {
 	    for (Board board : solver.solution())
 		StdOut.println(board);}}}
 
-class SearchNode {
+class SearchNode implements Comparable<SearchNode> {
     public Board board;
     public int moves;
     public SearchNode previous;
+    public SearchNode next;
     public SearchNode (final Board board, final int moves, final SearchNode previous) {
 	this.board = board;
 	this.moves = moves;
-	this.previous = previous;}
+	this.previous = previous;
+	if (this.previous!=null)
+	    this.previous.next = this;}
+    public int priority () {
+	return board.hamming() + moves;}
+    public int compareTo (SearchNode that) {
+	if (this.priority() < that.priority()) return -1;
+	if (this.priority() > that.priority()) return +1;
+	return 0;}
     @Override
     public String toString () {
 	StringBuffer sb = new StringBuffer();
-	sb.append(String.format("ham:  %s\n", board.hamming()));
-	sb.append(String.format("man:  %s\n", board.hamming()));
-	sb.append(String.format("mov:  %s\n", moves));
+	sb.append(String.format("priority:  %s\n", priority()));
 	sb.append(String.format("%s\n", board));
-	sb.append(previous==null ? "" : previous);
 	return sb.toString();}}
-
-class HammingPriority implements Comparator<SearchNode> {
-    @Override
-    public int compare (SearchNode o1, SearchNode o2) {
-	if (o1.board.hamming() + o1.moves < o2.board.hamming() + o2.moves)
-	    return -1;
-	if (o1.board.hamming() + o1.moves > o2.board.hamming() + o2.moves)
-	    return 1;
-	return 0;}}
-
-class ManhattanPriority implements Comparator<SearchNode> {
-    @Override
-    public int compare (SearchNode o1, SearchNode o2) {
-	if (o1.board.manhattan() + o1.moves < o2.board.manhattan() + o2.moves)
-	    return -1;
-	if (o1.board.manhattan() + o1.moves > o2.board.manhattan() + o2.moves)
-	    return 1;
-	return 0;}}
 
 class Puzzle implements Iterable<SearchNode> {
     public SearchNode first = null;
@@ -96,16 +93,29 @@ class Puzzle implements Iterable<SearchNode> {
 	first = new SearchNode(initial, 0, null);}
     public Iterator<SearchNode> iterator () {
 	return new Iterator<SearchNode>() {
-	    MinPQ<SearchNode> pq = new MinPQ<>(new HammingPriority());
+	    MinPQ<SearchNode> pq = new MinPQ<>();
 	    SearchNode last = first;
+	    boolean launched = false;
 	    {pq.insert(last);}
 	    @Override
+	    public String toString () {
+		StringBuffer sb = new StringBuffer();
+		for (SearchNode sn : pq)
+		    sb.append(sn.toString());
+		sb.append("------------------");
+		return sb.toString();}
+	    @Override
 	    public boolean hasNext () {
-		return !pq.isEmpty() && !last.board.isGoal();}
+		if (pq.isEmpty()) throw new IllegalStateException();
+		if (!launched) return true;
+		if (!last.board.isGoal()) return true;
+		return false;}
 	    @Override
 	    public SearchNode next () {
+		// System.out.println(this);
 		last = pq.delMin();
 		for (Board b : last.board.neighbors()) {
 		    if (last.previous==null || !last.previous.board.equals(b))
 			pq.insert(new SearchNode(b, last.moves+1, last));}
+		if (!launched) launched = true;
 		return last;}};}}
