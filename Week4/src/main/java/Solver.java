@@ -13,37 +13,27 @@ public class Solver {
 	Iterator<SearchNode> i2 = p2.iterator();
 	while (i1.hasNext() && i2.hasNext()) {last = i1.next(); i2.next();}
 	if (i2.hasNext())
-	    new Iterable<Board>() {
+	    (new Iterable<Board>() {
 		@Override
 		public Iterator<Board> iterator () {
 		    return new Iterator<Board>() {
-			SearchNode curr = last;
+			SearchNode curr = new SearchNode(null, 0, last);
 			@Override
 			public boolean hasNext () {
-			    if (
+			    if (curr.previous==null) return false;
+			    return true;}
+			@Override
+			public Board next () {
+			    if (!hasNext()) throw new NoSuchElementException();
+			    curr = curr.previous;
+			    return curr.board;}};}}).forEach(target::add);
+	Collections.reverse(target);}
     public boolean isSolvable () {
-	return last!=null;}
+	return !target.isEmpty();}
     public int moves () {
-	if (!isSolvable()) throw new IllegalStateException();
-	List<Board> target = new ArrayList<>();
-	solution().forEach(target::add);
-	return target.size();}
+	return target.size()-1;}
     public Iterable<Board> solution () {
-	return new Iterable<Board>() {
-	    @Override
-	    public Iterator<Board> iterator () {
-		return new Iterator<Board>() {
-		    SearchNode curr = p1.first;
-		    @Override
-		    public boolean hasNext () {
-			if (curr.next==null) return false;
-			return true;}
-		    @Override
-		    public Board next () {
-			if (!hasNext()) throw new NoSuchElementException();
-			Board b = curr.board;
-			curr = curr.next;
-			return b;}};}};}
+	return target;}
     public static void main (String[] args) {
 	// create initial board from file
 	In in = new In(args[0]);
@@ -67,13 +57,10 @@ class SearchNode implements Comparable<SearchNode> {
     public Board board;
     public int moves;
     public SearchNode previous;
-    public SearchNode next;
     public SearchNode (final Board board, final int moves, final SearchNode previous) {
 	this.board = board;
 	this.moves = moves;
-	this.previous = previous;
-	if (this.previous!=null)
-	    this.previous.next = this;}
+	this.previous = previous;}
     public int priority () {
 	return board.hamming() + moves;}
     public int compareTo (SearchNode that) {
