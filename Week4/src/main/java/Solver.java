@@ -61,11 +61,15 @@ class SearchNode implements Comparable<SearchNode> {
 	this.board = board;
 	this.moves = moves;
 	this.previous = previous;}
-    public int priority () {
+    public int priority1 () {
 	return board.manhattan() + moves;}
+    public int priority2 () {
+	return board.hamming() + moves;}
     public int compareTo (SearchNode that) {
-	if (this.priority() < that.priority()) return -1;
-	if (this.priority() > that.priority()) return +1;
+	if (this.priority1() < that.priority1()) return -1;
+	if (this.priority1() > that.priority2()) return +1;
+	if (this.priority2() < that.priority2()) return -1;
+	if (this.priority2() > that.priority2()) return +1;
 	return 0;}}
 
 class Puzzle implements Iterable<SearchNode> {
