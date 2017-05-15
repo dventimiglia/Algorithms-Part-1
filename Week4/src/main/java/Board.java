@@ -101,8 +101,8 @@ public final class Board {
 
     public boolean equals (final Object that) {
 	if (this==that) return true;
-	if (!(that instanceof Board)) return false;
 	if (that==null) return false;
+	if (this.getClass()!=that.getClass()) return false;
 	if (dimension()!=((Board)that).dimension()) return false;
 	for (int i = 0; i<dimension(); i++)
 	    for (int j = 0; j<dimension(); j++)
