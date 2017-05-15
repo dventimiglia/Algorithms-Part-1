@@ -138,34 +138,7 @@ public class Board {
 	StringBuilder s = new StringBuilder();
 	s.append(dimension() + "\n");
 	for (int i = 0; i < dimension(); i++) {
-	    for (int j = 0; j < dimension(); j++) {
+	    for (int j = 0; j < dimension(); j++)
 		s.append(String.format("%2d ", blocks[i][j]));
-	    }
-	    s.append("\n");
-	}
-	return s.toString();
-    }
-
-    // public String toString () {
-    // 	StringBuffer sb = new StringBuffer();
-    // 	sb.append(String.format("%d\n", dimension()));
-    // 	String fmt = String.join(" ", Collections.nCopies(dimension(), "%s")) + "\n";
-    // 	for (int[] row : blocks) {
-    // 	    int col = 0;
-    // 	    for (int cell : row) {
-    // 		sb.append(String.format(col==0 ? "%2d" : "%3d", cell));
-    // 		col++;}
-    // 	    sb.append("\n");}
-    // 	return sb.toString();}
-
-    public static void main (final String[] args) {
-	Board b = new Board(new int[][]{{1,0,2},
-					{3,4,5},
-					{6,7,8}});
-	System.out.println("Dimension:");
-	System.out.println(b.dimension());
-	System.out.println("Board:");
-	System.out.println(b);
-	System.out.println("Neighbors:");
-	for (Board n : b.neighbors())
-	    System.out.println(n);}}
+	    s.append("\n");}
+	return s.toString();}}

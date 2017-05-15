@@ -66,13 +66,7 @@ class SearchNode implements Comparable<SearchNode> {
     public int compareTo (SearchNode that) {
 	if (this.priority() < that.priority()) return -1;
 	if (this.priority() > that.priority()) return +1;
-	return 0;}
-    @Override
-    public String toString () {
-	StringBuffer sb = new StringBuffer();
-	sb.append(String.format("priority:  %s\n", priority()));
-	sb.append(String.format("%s\n", board));
-	return sb.toString();}}
+	return 0;}}
 
 class Puzzle implements Iterable<SearchNode> {
     public SearchNode first = null;
