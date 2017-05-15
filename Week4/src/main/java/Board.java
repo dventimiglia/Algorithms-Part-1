@@ -1,7 +1,7 @@
 import edu.princeton.cs.algs4.*;
 import java.util.*;
 
-public class Board {
+public final class Board {
     private int[][] blocks;
     private int blank;
     private int manhattan = -1;
