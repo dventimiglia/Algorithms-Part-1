@@ -33,7 +33,7 @@ public class Solver {
     public int moves () {
 	return target.size()-1;}
     public Iterable<Board> solution () {
-	return target;}
+	return isSolvable() ? target : null;}
     public static void main (String[] args) {
 	// create initial board from file
 	In in = new In(args[0]);
@@ -62,7 +62,7 @@ class SearchNode implements Comparable<SearchNode> {
 	this.moves = moves;
 	this.previous = previous;}
     public int priority () {
-	return board.hamming() + moves;}
+	return board.manhattan() + moves;}
     public int compareTo (SearchNode that) {
 	if (this.priority() < that.priority()) return -1;
 	if (this.priority() > that.priority()) return +1;
@@ -85,13 +85,6 @@ class Puzzle implements Iterable<SearchNode> {
 	    boolean launched = false;
 	    {pq.insert(last);}
 	    @Override
-	    public String toString () {
-		StringBuffer sb = new StringBuffer();
-		for (SearchNode sn : pq)
-		    sb.append(sn.toString());
-		sb.append("------------------");
-		return sb.toString();}
-	    @Override
 	    public boolean hasNext () {
 		if (pq.isEmpty()) throw new IllegalStateException();
 		if (!launched) return true;
@@ -99,7 +92,6 @@ class Puzzle implements Iterable<SearchNode> {
 		return false;}
 	    @Override
 	    public SearchNode next () {
-		// System.out.println(this);
 		last = pq.delMin();
 		for (Board b : last.board.neighbors()) {
 		    if (last.previous==null || !last.previous.board.equals(b))

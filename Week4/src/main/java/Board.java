@@ -4,6 +4,8 @@ import java.util.*;
 public class Board {
     private int[][] blocks;
     private int blank;
+    private int manhattan = -1;
+    private int hamming = -1;
 
     public Board (final int[][] blocks) {
 	this.blocks = copyOf(blocks);
@@ -62,22 +64,21 @@ public class Board {
 	return blocks.length;}
 
     public int hamming () {
-	int errors = 0;
-	for (int i = 1; i<=dimension()*dimension(); i++)
-	    errors+=hamming(i);
-	return errors;}
+	if (hamming<0) {
+	    hamming = 0;
+	    for (int i = 1; i<=dimension()*dimension(); i++)
+		hamming+=hamming(i);}
+	return hamming;}
 
     public int manhattan () {
-	int errors = 0;
-	for (int i = 1; i<=dimension()*dimension(); i++)
-	    errors+=manhattan(i);
-	return errors;}
+	if (manhattan<0) {
+	    manhattan = 0;
+	    for (int i = 1; i<=dimension()*dimension(); i++)
+		manhattan+=manhattan(i);}
+	return manhattan;}
 
     public boolean isGoal () {
-	if (hamming()!=0 || manhattan()!=0)
-	    if (hamming()*manhattan()==0)
-		throw new IllegalStateException();
-	return hamming()==0;}
+	return manhattan()==0;}
 
     private Board twin (final int r1, final int c1, final int r2, final int c2) {
 	int[][] t = copyOf(blocks);
@@ -133,18 +134,29 @@ public class Board {
 	    n.add(neighbor(d));
 	return n;}
 
-    public String toString () {
-	StringBuffer sb = new StringBuffer();
-	sb.append(String.format("%d\n", dimension()));
-	String fmt = String.join(" ", Collections.nCopies(dimension(), "%s")) + "\n";
-	for (int[] row : blocks) {
-	    int col = 0;
-	    for (int cell : row) {
-		sb.append(String.format(col==0 ? "%2d" : "%3d", cell));
-		col++;}
-	    // sb.append(String.format("  H:%s, M:%s", hamming(), manhattan()));
-	    sb.append("\n");}
-	return sb.toString();}
+    public String toString() {
+	StringBuilder s = new StringBuilder();
+	s.append(dimension() + "\n");
+	for (int i = 0; i < dimension(); i++) {
+	    for (int j = 0; j < dimension(); j++) {
+		s.append(String.format("%2d ", blocks[i][j]));
+	    }
+	    s.append("\n");
+	}
+	return s.toString();
+    }
+
+    // public String toString () {
+    // 	StringBuffer sb = new StringBuffer();
+    // 	sb.append(String.format("%d\n", dimension()));
+    // 	String fmt = String.join(" ", Collections.nCopies(dimension(), "%s")) + "\n";
+    // 	for (int[] row : blocks) {
+    // 	    int col = 0;
+    // 	    for (int cell : row) {
+    // 		sb.append(String.format(col==0 ? "%2d" : "%3d", cell));
+    // 		col++;}
+    // 	    sb.append("\n");}
+    // 	return sb.toString();}
 
     public static void main (final String[] args) {
 	Board b = new Board(new int[][]{{1,0,2},
