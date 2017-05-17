@@ -29,8 +29,8 @@ public class PointSET {
 	    .filter(p ->
 		    p.x()>=rect.xmin() &&
 		    p.x()<=rect.xmax() &&
-		    p.y()<=rect.ymin() &&
-		    p.y()>=rect.ymax())::iterator;}
+		    p.y()>=rect.ymin() &&
+		    p.y()<=rect.ymax())::iterator;}
     public Point2D nearest (final Point2D p) {
 	if (p==null) throw new NullPointerException("p is null!");
 	return
